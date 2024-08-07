@@ -1,0 +1,150 @@
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .form-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    form h2 {
+      margin-top: 0;
+      color: #007bff;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .response {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Student Management System</h1>
+  <div class="form-container">
+    <form id="academic-form">
+      <h2>Academic Records</h2>
+      <label for="student_id_academic">Student ID</label>
+      <input type="text" id="student_id_academic" required>
+      <label for="name_academic">Name</label>
+      <input type="text" id="name_academic" required>
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" required>
+      <label for="grade">Grade</label>
+      <input type="text" id="grade" required>
+      <label for="other_academic_info">Other Academic Info</label>
+      <input type="text" id="other_academic_info">
+      <button type="submit">Add Academic Record</button>
+      <div class="response" id="academic-response"></div>
+    </form>
+
+    <form id="cocurricular-form">
+      <h2>Co-Curricular Activities</h2>
+      <label for="student_id_cocurricular">Student ID</label>
+      <input type="text" id="student_id_cocurricular" required>
+      <label for="name_cocurricular">Name</label>
+      <input type="text" id="name_cocurricular" required>
+      <label for="activity_type">Activity Type</label>
+      <input type="text" id="activity_type" required>
+      <label for="duration">Duration</label>
+      <input type="text" id="duration" required>
+      <label for="achievements">Achievements</label>
+      <input type="text" id="achievements">
+      <button type="submit">Add Co-Curricular Activity</button>
+      <div class="response" id="cocurricular-response"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('academic-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const student_id = document.getElementById('student_id_academic').value;
+      const name = document.getElementById('name_academic').value;
+      const subject = document.getElementById('subject').value;
+      const grade = document.getElementById('grade').value;
+      const other_academic_info = document.getElementById('other_academic_info').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/academic_records', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ student_id, name, subject, grade, other_academic_info })
+        });
+        const result = await response.json();
+        document.getElementById('academic-response').textContent = `Record added: ${JSON.stringify(result)}`;
+      } catch (error) {
+        document.getElementById('academic-response').textContent = `Error: ${error.message}`;
+      }
+    });
+
+    document.getElementById('cocurricular-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const student_id = document.getElementById('student_id_cocurricular').value;
+      const name = document.getElementById('name_cocurricular').value;
+      const activity_type = document.getElementById('activity_type').value;
+      const duration = document.getElementById('duration').value;
+      const achievements = document.getElementById('achievements').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/co_curricular_activities', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ student_id, name, activity_type, duration, achievements })
+        });
+        const result = await response.json();
+        document.getElementById('cocurricular-response').textContent = `Activity added: ${JSON.stringify(result)}`;
+      } catch (error) {
+        document.getElementById('cocurricular-response').textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
